@@ -31,7 +31,7 @@ async function launch() {
 
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
-    await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('RPG Paradize')).toBeVisible();
 
     const voteBtns = await page
         .locator('vote-vote-site')
@@ -52,5 +52,7 @@ async function launch() {
 launch().then(() => {
     console.log('Done');
 
+    process.exit(0);
+}).catch(() => {
     process.exit(0);
 });
