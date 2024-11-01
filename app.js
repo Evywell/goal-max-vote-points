@@ -29,6 +29,8 @@ async function launch() {
 
     await page.goto(DOMAIN + '/vote');
 
+    await page.screenshot({ path: 'screenshot.png', fullPage: true });
+
     await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 30_000 });
 
     const voteBtns = await page

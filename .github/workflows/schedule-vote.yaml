@@ -14,5 +14,9 @@ jobs:
           DOMAIN: ${{ secrets.DOMAIN }}
           FORM_INPUT_1: ${{ secrets.FORM_INPUT_1 }}
           FORM_INPUT_2: ${{ secrets.FORM_INPUT_2 }}
-        run: |
-          npm ci && node app.js
+        run: npm ci && node app.js
+      - name: Screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: screenshot.png
