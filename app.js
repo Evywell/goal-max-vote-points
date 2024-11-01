@@ -1,8 +1,11 @@
-const {chromium} = require("playwright");
+const {chromium} = require("playwright-extra");
 const {expect} = require("playwright/test");
+const stealth = require('puppeteer-extra-plugin-stealth')()
 
 async function launch() {
     const DOMAIN = process.env.DOMAIN;
+
+    chromium.use(stealth);
 
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext();
@@ -33,16 +36,30 @@ async function launch() {
 
     const voteBtns = await page
         .locator('vote-vote-site')
-        .getByRole('link', { name: 'voter' }).all();
+        .getByRole('link', { name: 'voter' })
+        .all();
 
     console.log(`Found ${voteBtns.length} vote buttons`);
 
-    for (const btn of voteBtns) {
-        const i = voteBtns.indexOf(btn);
-        console.log('Trying to click on ' + i);
+    await page
+        .locator('vote-vote-site')
+        .getByRole('link', { name: 'voter' })
+        .first()
+        .click();
 
-        await btn.click();
-    }
+    await page
+        .locator('vote-vote-site')
+        .getByRole('link', { name: 'voter' })
+        .nth(1)
+        .click();
+
+    await page
+        .locator('vote-vote-site')
+        .getByRole('link', { name: 'voter' })
+        .last()
+        .click();
+
+    await page.screenshot({ path: 'screenshot2.png', fullPage: true });
 
     await browser.close();
 }
