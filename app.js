@@ -1,4 +1,5 @@
 const {chromium} = require("playwright");
+const {expect} = require("playwright/test");
 
 async function launch() {
     const DOMAIN = process.env.DOMAIN;
@@ -27,6 +28,8 @@ async function launch() {
     console.log('Sign in successfully !');
 
     await page.goto(DOMAIN + '/vote');
+
+    await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 30_000 });
 
     const voteBtns = await page
         .locator('vote-vote-site')
