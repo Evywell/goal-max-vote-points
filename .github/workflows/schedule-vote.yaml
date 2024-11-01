@@ -1,0 +1,18 @@
+name: Schedule vote
+on: [push]
+jobs:
+  Launch-Voting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Launch commands
+        env:
+          DOMAIN: ${{ secrets.DOMAIN }}
+          FORM_INPUT_1: ${{ secrets.FORM_INPUT_1 }}
+          FORM_INPUT_2: ${{ secrets.FORM_INPUT_2 }}
+        run: |
+          npm ci && node app.js
