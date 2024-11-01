@@ -30,6 +30,8 @@ async function launch() {
 
     await page.goto(DOMAIN + '/vote');
 
+    await page.waitForTimeout(15_000);
+
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
     await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 15_000 });
