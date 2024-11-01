@@ -1,0 +1,9 @@
+{
+  "name": "auto-vote",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@playwright/browser-chromium": "^1.47.0",
+    "playwright": "^1.47.0"
+  }
+}
