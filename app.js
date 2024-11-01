@@ -32,7 +32,7 @@ async function launch() {
 
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
-    await expect(page.getByText('RPG Paradize')).toBeVisible();
+    await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 15_000 });
 
     const voteBtns = await page
         .locator('vote-vote-site')
