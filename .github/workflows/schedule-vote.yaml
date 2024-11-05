@@ -12,6 +12,8 @@ jobs:
       - name: Launch commands
         env:
           DOMAIN: ${{ secrets.DOMAIN }}
+          API_DOMAIN:  ${{ secrets.API_DOMAIN }}
+          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
           FORM_INPUT_1: ${{ secrets.FORM_INPUT_1 }}
           FORM_INPUT_2: ${{ secrets.FORM_INPUT_2 }}
         run: npm ci && node app.js

@@ -1,15 +1,17 @@
 const {chromium} = require("playwright-extra");
-const {expect} = require("playwright/test");
 const stealth = require('puppeteer-extra-plugin-stealth')()
 
 async function launch() {
     const DOMAIN = process.env.DOMAIN;
+    const API_DOMAIN = process.env.API_DOMAIN;
+    const ACCOUNT_ID = process.env.ACCOUNT_ID;
 
     chromium.use(stealth);
 
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext();
     const page = await context.newPage();
+    const request = await context.request;
 
     await page.goto(DOMAIN + '/login');
 
@@ -28,40 +30,88 @@ async function launch() {
 
     console.log('Sign in successfully !');
 
-    await page.goto(DOMAIN + '/vote');
-
-    await page.waitForTimeout(15_000);
+    const storage = await page.context().storageState();
+    const accessTokenStorage = storage.origins[0].localStorage.find((el) => el['name'] === 'access_token');
 
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
-    await expect(page.getByText('RPG Paradize')).toBeVisible({ timeout: 15_000 });
+    await request.post(API_DOMAIN + '/api/web/votes', {
+        headers: {
+            'Authorization': 'Bearer ' + accessTokenStorage.value,
+            'Content-Type': 'application/json'
+        },
+        data: {
+            "id": {
+                "account": ACCOUNT_ID,
+                "site": 5
+            },
+            "account_id": ACCOUNT_ID,
+            "site_id": 5,
+            "validate": false,
+            "captcha": null,
+            "site": {
+                "id": 5,
+                "name": "Gowonda",
+                "url": "https://www.gowonda.com/vote.php?server_id=6402",
+                "image": "gowonda",
+                "cooldown": 120,
+                "server": "NONE"
+            },
+            "expired": true
+        }
+    });
 
-    const voteBtns = await page
-        .locator('vote-vote-site')
-        .getByRole('link', { name: 'voter' })
-        .all();
+    await request.post(API_DOMAIN + '/api/web/votes', {
+        headers: {
+            'Authorization': 'Bearer ' + accessTokenStorage.value,
+            'Content-Type': 'application/json'
+        },
+        data: {
+            "id": {
+                "account": ACCOUNT_ID,
+                "site": 2
+            },
+            "account_id": ACCOUNT_ID,
+            "site_id": 2,
+            "validate": false,
+            "captcha": null,
+            "site": {
+                "id": 2,
+                "name": "RPG Paradize",
+                "url": "https://www.rpg-paradize.com/?page=vote&vote=3950",
+                "image": "rpg",
+                "cooldown": 120,
+                "server": "NONE"
+            },
+            "expired": true
+        }
+    });
 
-    console.log(`Found ${voteBtns.length} vote buttons`);
-
-    await page
-        .locator('vote-vote-site')
-        .getByRole('link', { name: 'voter' })
-        .first()
-        .click();
-
-    await page
-        .locator('vote-vote-site')
-        .getByRole('link', { name: 'voter' })
-        .nth(1)
-        .click();
-
-    await page
-        .locator('vote-vote-site')
-        .getByRole('link', { name: 'voter' })
-        .last()
-        .click();
-
-    await page.screenshot({ path: 'screenshot2.png', fullPage: true });
+    await request.post(API_DOMAIN + '/api/web/votes', {
+        headers: {
+            'Authorization': 'Bearer ' + accessTokenStorage.value,
+            'Content-Type': 'application/json'
+        },
+        data: {
+            "id": {
+                "account": ACCOUNT_ID,
+                "site": 1
+            },
+            "account_id": ACCOUNT_ID,
+            "site_id": 1,
+            "validate": false,
+            "captcha": null,
+            "site": {
+                "id": 2,
+                "name": "Serveur Privé",
+                "url": "https://serveur-prive.net/world-of-warcraft/way-of-elendil-wotlk-3-3-5-178/vote",
+                "image": "serveur-prive",
+                "cooldown": 90,
+                "server": "NONE"
+            },
+            "expired": true
+        }
+    });
 
     await browser.close();
 }
