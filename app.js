@@ -35,7 +35,7 @@ async function launch() {
 
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
-    await request.post(API_DOMAIN + '/api/web/votes', {
+    const vote1Response = await request.post(API_DOMAIN + '/api/web/votes', {
         headers: {
             'Authorization': 'Bearer ' + accessTokenStorage.value,
             'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ async function launch() {
         }
     });
 
-    await request.post(API_DOMAIN + '/api/web/votes', {
+    const vote2Response = await request.post(API_DOMAIN + '/api/web/votes', {
         headers: {
             'Authorization': 'Bearer ' + accessTokenStorage.value,
             'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ async function launch() {
         }
     });
 
-    await request.post(API_DOMAIN + '/api/web/votes', {
+    const vote3Response = await request.post(API_DOMAIN + '/api/web/votes', {
         headers: {
             'Authorization': 'Bearer ' + accessTokenStorage.value,
             'Content-Type': 'application/json'
@@ -112,6 +112,8 @@ async function launch() {
             "expired": true
         }
     });
+
+    console.log(vote1Response.status(), vote2Response.status(), vote3Response.status());
 
     await browser.close();
 }
