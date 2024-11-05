@@ -35,6 +35,8 @@ async function launch() {
 
     await page.screenshot({ path: 'screenshot.png', fullPage: true });
 
+    console.log(accessTokenStorage.value.length);
+
     const vote1Response = await request.post(API_DOMAIN + '/api/web/votes', {
         headers: {
             'Authorization': 'Bearer ' + accessTokenStorage.value,
